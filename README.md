@@ -51,4 +51,4 @@ Vibe Vault runs entirely locally on your computer.
 
 ## Author
 
-Created by [akasumitlamba](https://github.com/akasumitlamba) 
+Created by [akasumitlamba](https://github.com/akasumitlamba) with the help of AI
