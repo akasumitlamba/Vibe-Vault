@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TuneSync Downloader</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            background-color: var(--bg-color, #10111A);
+            color: var(--text-color, #e5e7eb);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
+            position: relative;
+            overflow: hidden;
+            
+            background-image: 
+                radial-gradient(
+                    circle var(--glow-size) at var(--mouse-x) var(--mouse-y),
+                    var(--glow-color-1),
+                    var(--glow-color-2),
+                    var(--glow-color-3),
+                    transparent 70%
+                ),
+                radial-gradient(
+                    circle at center, 
+                    var(--dot-color) 1px, 
+                    transparent 1.5px 
+                );
+            background-repeat: no-repeat, repeat; 
+            background-size: auto, 22px 22px;
+        }
+        
+        :root, html[data-theme="dark"] {
+            --bg-color: #10111A;
+            --text-color: #e5e7eb; 
+            --text-muted: #a0aec0;
+            --card-bg: #1A1C2A;
+            --card-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+            --input-bg: #2D303E;
+            --input-border: #4A5568; 
+            --input-focus-ring: #9f7aea;
+            --input-placeholder: #8b949e; 
+            --button-primary-bg: #9f7aea;
+            --button-primary-hover: #805ad5;
+            --button-primary-text: #ffffff;
+            --button-secondary-bg: #4A5568;
+            --button-secondary-hover: #2D3748;
+            --button-secondary-text: #e5e7eb;
+            --button-disabled-bg: #4A5568;
+            --accent-gradient-start: #9f7aea;
+            --accent-gradient-end: #ed64a6;
+            --border-color: #4A5568;
+            --scrollbar-thumb: #4A5568;
+            --scrollbar-track: #2D303E;
+            --success-color: #68d391;
+            --error-color: #fc8181;  
+            --warning-color: #f6e05e;
+            --info-color: #7f9cf5;   
+            --success-bg: rgba(104, 211, 145, 0.1);
+            --error-bg: rgba(252, 129, 129, 0.1);
+            --warning-bg: rgba(246, 224, 94, 0.1);
+            --message-info-bg: #2c3a57;
+            --message-info-text: #a3bfef;
+            --message-info-border: #5a67d8;
+            --message-file-bg: #253a36;
+            --message-file-text: #81e6d9;
+            --message-file-border: #38b2ac;
+            --loader-bar-color: var(--button-primary-bg);
+            --link-color: #58a6ff;
+            --dot-color: rgba(100, 116, 139, 0.6);
+            --glow-size: 300px;
+            --glow-color-1: rgba(167, 139, 250, 0.25);
+            --glow-color-2: rgba(244, 114, 182, 0.20); 
+            --glow-color-3: rgba(96, 165, 250, 0.25); 
+        }
+        html[data-theme="light"] {
+            --bg-color: #f7fafc;
+            --text-color: #1a202c;
+            --text-muted: #718096;
+            --card-bg: #ffffff;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            --input-bg: #ffffff;
+            --input-border: #cbd5e0;
+            --input-focus-ring: #9f7aea; 
+            --input-focus-shadow: 0 0 0 3px rgba(159, 122, 234, 0.2);
+            --input-placeholder: #a0aec0;
+            --button-primary-bg: #805ad5;
+            --button-primary-hover: #6b46c1;
+            --button-primary-text: #ffffff;
+            --button-secondary-bg: #e2e8f0;
+            --button-secondary-hover: #cbd5e0;
+            --button-secondary-text: #4a5568;
+            --button-disabled-bg: #e2e8f0;
+            --accent-gradient-start: var(--button-primary-bg);
+            --accent-gradient-end: #d53f8c;
+            --border-color: var(--input-border);
+            --scrollbar-thumb: #cbd5e0;
+            --scrollbar-track: #edf2f7;
+            --success-color: #38a169;
+            --error-color: #e53e3e;  
+            --warning-color: #dd6b20;
+            --info-color: #3182ce;   
+            --success-bg: #f0fff4;
+            --error-bg: #fff5f5;
+            --warning-bg: #fffaf0;
+            --message-info-bg: #ebf8ff;
+            --message-info-text: #2c5282;
+            --message-info-border: #90cdf4;
+            --message-file-bg: #e6fffa;
+            --message-file-text: #234e52; 
+            --message-file-border: #4fd1c5;
+            --loader-bar-color: var(--button-primary-bg);
+            --link-color: #3182ce;
+            --dot-color: rgba(100, 116, 139, 0.3);
+            --glow-size: 350px;
+            --glow-color-1: rgba(167, 139, 250, 0.12); 
+            --glow-color-2: rgba(244, 114, 182, 0.10); 
+            --glow-color-3: rgba(96, 165, 250, 0.12); 
+        }
+
+        html[data-theme="light"] .theme-toggle-button {
+            border-color: var(--input-border);
+            background-color: var(--input-bg);
+        }
+        html[data-theme="light"] .theme-toggle-button:hover {
+            background-color: #ffffff;
+            border-color: #a0aec0;
+            color: var(--text-color);
+        }
+        html[data-theme="light"] .theme-toggle-button .knob {
+            background-color: var(--button-secondary-text);
+        }
+        html[data-theme="light"] .theme-toggle-button .knob::before {
+            opacity: 0.8;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 42rem; 
+            background-color: var(--card-bg);
+            box-shadow: var(--card-shadow);
+            border-radius: 1rem;
+            padding: 2rem; 
+            margin: 1rem 0;
+            z-index: 1; 
+        }
+         @media (min-width: 768px) {
+            .main-container { padding: 2.5rem; }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem; 
+        }
+        .header-icon-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem; 
+            margin-bottom: 0.5rem; 
+        }
+        .header-title-block {
+             display: flex;
+             flex-direction: column;
+             align-items: flex-start;
+        }
+        .header h1 {
+            font-size: 2rem; 
+            font-weight: 700;
+            letter-spacing: -0.025em; 
+            background-image: linear-gradient(to right, var(--accent-gradient-start), var(--accent-gradient-end));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0;
+            line-height: 1.1;
+        }
+        @media (min-width: 768px) {
+            .header h1 { font-size: 2.5rem; }
+        }
+        .header h3 {
+             font-size: 1rem;
+             font-weight: 500;
+             color: var(--text-muted);
+             margin: 0.1rem 0 0 0;
+             line-height: 1.2;
+        }
+        .header .subtitle {
+            color: var(--text-muted);
+            font-size: 0.875rem; 
+            margin-top: 0.75rem;
+        }
+        
+        .icon {
+            display: inline-block;
+            width: 1.25em;
+            height: 1.25em;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            vertical-align: middle;
+        }
+        .icon-music { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-music"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>'); filter: invert(75%) sepia(38%) saturate(5844%) hue-rotate(235deg) brightness(101%) contrast(94%); }
+        .icon-link { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%236b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>'); }
+        .icon-download { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download-cloud"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m8 17 4 4 4-4"/></svg>'); }
+        .icon-loader { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>'); animation: spin 1s linear infinite; }
+        .icon-clock { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'); }
+        .icon-check { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2334d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>'); }
+        .icon-fail { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23f87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-x"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>'); }
+        .icon-clear { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M3 12a9 9 0 0 1 9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>'); }
+        .icon-alert { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>'); }
+        
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        form { margin-bottom: 1.5rem; }
+        .input-group { position: relative; margin-bottom: 1rem; }
+        .input-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); pointer-events: none; }
+        input[type="url"] {
+            width: 100%;
+            padding-left: 2.5rem;
+            padding-right: 1rem;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 0.625rem;
+            color: var(--text-color);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            font-size: 1rem;
+        }
+        input[type="url"]::placeholder { color: var(--input-placeholder); }
+        input[type="url"]:focus {
+            border-color: var(--input-focus-ring);
+            box-shadow: 0 0 0 2px var(--input-focus-ring);
+        }
+        input[type="url"]:disabled { background-color: #4b5563; cursor: not-allowed; }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            border-radius: 0.625rem;
+            transition: background-color 0.2s, opacity 0.2s;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            font-size: 1rem;
+        }
+        .button-primary {
+            background-color: var(--button-primary-bg);
+            color: var(--button-primary-text);
+        }
+        .button-primary:hover { background-color: var(--button-primary-hover); }
+        .button-primary:disabled { background-color: var(--button-disabled-bg); opacity: 0.7; cursor: not-allowed; }
+        .button-secondary {
+            background-color: var(--button-secondary-bg);
+            color: var(--button-secondary-text);
+            margin-top: 1rem;
+        }
+        .button-secondary:hover { background-color: var(--button-secondary-hover); }
+        
+        #initial-loading-indicator {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+        .loader {
+            height: 40px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 1.25rem;
+        }
+        .loader .bar {
+            width: 8px;
+            height: 5px;
+            border-radius: 4px;
+            background-color: var(--loader-bar-color);
+            animation: bounce 1.2s cubic-bezier(0.2, 0.68, 0.18, 1.08) infinite;
+        }
+        .loader .bar:nth-child(1) { animation-delay: 0.1s; }
+        .loader .bar:nth-child(2) { animation-delay: 0.2s; }
+        .loader .bar:nth-child(3) { animation-delay: 0.3s; }
+        .loader .bar:nth-child(4) { animation-delay: 0.4s; }
+        .loader .bar:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes bounce {
+            20% { height: 5px; }
+            50% { height: 35px; transform: translateY(-15px); }
+            80% { height: 5px; }
+            100% { height: 5px; transform: translateY(0); }
+        }
+        
+        #status-container {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+        #status-container h2 {
+            font-size: 1.125rem; 
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        .status-message, .error-message {
+            padding: 0.8rem 1.1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 0.375rem; 
+            font-size: 1rem; 
+            border-left-width: 4px;
+            border-left-style: solid;
+        }
+        .info-message { background-color: var(--message-info-bg); color: var(--message-info-text); border-left-color: var(--message-info-border);}
+        .error-message { background-color: var(--error-bg); color: var(--error-color); border-left-color: var(--error-color);}
+        
+        #downloaded-files-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 1rem;
+            max-height: 15rem; 
+            overflow-y: auto;
+            
+            scrollbar-width: thin;
+            scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+        }
+         #downloaded-files-list::-webkit-scrollbar { width: 6px; }
+         #downloaded-files-list::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 3px;}
+         #downloaded-files-list::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 3px; border: 1px solid var(--scrollbar-track); }
+        
+         .file-item {
+            background-color: var(--input-bg);
+            padding: 0.6rem 0.9rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+         .file-item a {
+             color: var(--link-color);
+             text-decoration: none;
+             font-weight: 500;
+             word-break: break-all;
+         }
+          .file-item a:hover { text-decoration: underline; }
+        
+        footer { text-align: center; margin-top: 2rem; }
+        footer p { font-size: 0.75rem; color: #4b5563; } 
+        html[data-theme="dark"] footer p { color: #4b5563; }
+
+        .theme-toggle-button {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 1000;
+
+            display: inline-flex;
+            align-items: center;
+            height: 28px; 
+            width: 56px; 
+            border-radius: 14px;
+            background-color: var(--button-secondary-bg);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            padding: 3px;
+            box-sizing: border-box;
+        }
+        
+        .theme-toggle-button .knob {
+            display: block;
+            width: 20px; 
+            height: 20px; 
+            border-radius: 50%;
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            
+            position: relative;
+            transform: translateX(0px);
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .theme-toggle-button .knob::before {
+            content: '☀️';
+             font-size: 12px;
+        }
+        
+        html[data-theme="dark"] .theme-toggle-button {
+             background-color: var(--button-primary-bg);
+             border-color: var(--button-primary-hover);
+        }
+        
+        html[data-theme="dark"] .theme-toggle-button .knob {
+            transform: translateX(28px);
+            background-color: #1A1C2A;
+        }
+
+        html[data-theme="dark"] .theme-toggle-button .knob::before {
+            content: '🌙';
+             font-size: 12px;
+        }
+
+        html[data-theme="light"] .theme-toggle-button {
+            border-color: var(--input-border);
+            background-color: var(--input-bg);
+        }
+        html[data-theme="light"] .theme-toggle-button:hover {
+            background-color: #ffffff;
+            border-color: #a0aec0;
+            color: var(--text-color);
+        }
+        html[data-theme="light"] .theme-toggle-button .knob {
+            background-color: var(--button-secondary-text);
+        }
+        html[data-theme="light"] .theme-toggle-button .knob::before {
+            opacity: 0.8;
+        }
+
+    </style>
+</head>
+<body>
+    <button id="themeToggleBtn" class="theme-toggle-button" aria-label="Toggle Theme">
+        <span class="knob"></span>
+    </button>
+
+    <main class="main-container">
+        <header class="header">
+            <div class="header-icon-title">
+                <span class="icon icon-music" style="width: 2.5rem; height: 2.5rem;"></span>
+                <div class="header-title-block">
+                    <h1>Vibe Vault</h1>
+                    <h3>Playlist Downloader</h3>
+                </div>
+            </div>
+            <p class="subtitle">Download your favorite YouTube Music playlists effortlessly.</p>
+        </header>
+
+        <form id="downloadForm" class="form">
+            <div class="input-group">
+                 <span class="icon icon-link input-icon"></span>
+                 <input
+                    type="url"
+                    id="playlistUrlInput"
+                    placeholder="Enter YouTube Music Playlist URL"
+                    required
+                 />
+            </div>
+            <button type="submit" id="submitBtn" class="button button-primary">
+                 <span class="icon icon-download"></span>
+                 <span>Download Playlist</span>
+            </button>
+        </form>
+
+        <div id="initial-loading-indicator" style="display: none;">
+            <div class="loader">
+                 <div class="bar"></div>
+                 <div class="bar"></div>
+                 <div class="bar"></div>
+                 <div class="bar"></div>
+                 <div class="bar"></div>
+            </div>
+            <p id="loading-text">Download in progress. Please wait...</p>
+        </div>
+
+        <div id="status-container" style="display: none;">
+            <h2>Download Status</h2>
+            <div id="status-messages"></div>
+            <ul id="downloaded-files-list"></ul>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <p>Disclaimer: This tool is for personal use only. Ensure you have rights to download the content.</p>
+    </footer>
+
+    <script>
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            let currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+        });
+        
+        const savedTheme = localStorage.getItem('theme') || 'dark'; 
+        applyTheme(savedTheme);
+        
+        const playlistUrlInput = document.getElementById('playlistUrlInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const downloadForm = document.getElementById('downloadForm');
+        const initialLoadingIndicator = document.getElementById('initial-loading-indicator');
+        const statusContainer = document.getElementById('status-container');
+        const statusMessages = document.getElementById('status-messages');
+        const downloadedFilesList = document.getElementById('downloaded-files-list');
+        
+        let eventSource;
+        let downloadedFiles = []; 
+        let downloadCompletedSuccessfully = false;
+
+        function addStatusMessage(message, className) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'status-message ' + className; 
+            messageDiv.textContent = message;
+            statusMessages.innerHTML = ''; 
+            statusMessages.appendChild(messageDiv);
+        }
+
+        function addFileToList(filename, playlistFolder) {
+            const listItem = document.createElement('li');
+            listItem.className = 'file-item'; 
+            const link = document.createElement('a');
+            link.href = `/downloads/${encodeURIComponent(playlistFolder)}/${encodeURIComponent(filename)}`;
+            link.textContent = filename;
+            link.target = '_blank'; 
+            listItem.appendChild(link);
+            downloadedFilesList.appendChild(listItem);
+        }
+
+        function resetUI() {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span class="icon icon-download"></span><span>Download Playlist</span>';
+            initialLoadingIndicator.style.display = 'none';
+            statusContainer.style.display = 'none'; 
+            statusMessages.innerHTML = ''; 
+            downloadedFilesList.innerHTML = ''; 
+            downloadedFiles = [];
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+            }
+        }
+
+        downloadForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const playlistUrl = playlistUrlInput.value.trim();
+
+            resetUI();
+            downloadCompletedSuccessfully = false;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="icon icon-loader animate-spin"></span><span>Downloading...</span>';
+            initialLoadingIndicator.style.display = 'block';
+            
+            if (!playlistUrl) {
+                 resetUI();
+                 addStatusMessage("Playlist URL cannot be empty.", "error-message");
+                 statusContainer.style.display = 'block';
+                 return;
+             }
+            if (!playlistUrl.includes('youtube.com/playlist') && !playlistUrl.includes('music.youtube.com/playlist')) {
+                 resetUI();
+                 addStatusMessage('Please enter a valid YouTube Music playlist URL.', "error-message");
+                 statusContainer.style.display = 'block';
+                 return;
+             }
+
+            const encodedPlaylistName = encodeURIComponent('downloaded_playlist'); 
+            const encodedPlaylistUrl = encodeURIComponent(playlistUrl);
+
+            eventSource = new EventSource(`/stream-download?playlist_url=${encodedPlaylistUrl}&playlist_name=${encodedPlaylistName}`);
+
+            eventSource.addEventListener('file_complete', (e) => {
+                 const data = JSON.parse(e.data);
+                 downloadedFiles.push({ filename: data.filename, folder: data.playlist_folder });
+            });
+            
+            eventSource.addEventListener('error_message', (e) => {
+                 const data = JSON.parse(e.data);
+                 resetUI(); 
+                 addStatusMessage(`Error: ${data.message}`, "error-message");
+                 statusContainer.style.display = 'block';
+                 if (eventSource) eventSource.close(); 
+            });
+            
+             eventSource.addEventListener('finished', (e) => {
+                 const data = JSON.parse(e.data);
+                 downloadCompletedSuccessfully = true;
+                 resetUI();
+                 
+                 addStatusMessage(data.message, "info-message"); 
+                 downloadedFiles.forEach(file => addFileToList(file.filename, file.folder));
+                 
+                 if(downloadedFiles.length > 0) {
+                    if(!document.getElementById('downloaded-files-list').previousElementSibling || document.getElementById('downloaded-files-list').previousElementSibling.tagName !== 'H2'){
+                         const h2 = document.createElement('h2');
+                         h2.textContent = 'Completed Files';
+                         downloadedFilesList.parentNode.insertBefore(h2, downloadedFilesList);
+                    }
+                 } else {
+                     
+                      const existingH2 = document.querySelector('#status-container h2:last-of-type');
+                      if(existingH2 && existingH2.textContent.includes('Completed Files')) existingH2.remove();
+                 }
+                 statusContainer.style.display = 'block';
+                 if (eventSource) eventSource.close();
+            });
+
+            eventSource.addEventListener('stream_end', (e) => {
+                 console.log("Stream ended."); 
+                 
+                 if (initialLoadingIndicator.style.display === 'block' && !downloadCompletedSuccessfully) { 
+                    resetUI();
+                    addStatusMessage("Download process finished unexpectedly or was interrupted. Check completed files.", "info-message");
+                    downloadedFiles.forEach(file => addFileToList(file.filename, file.folder));
+                     if(downloadedFiles.length > 0) {
+                         if(!document.getElementById('downloaded-files-list').previousElementSibling || document.getElementById('downloaded-files-list').previousElementSibling.tagName !== 'H2'){
+                             const h2 = document.createElement('h2');
+                             h2.textContent = 'Completed Files';
+                             downloadedFilesList.parentNode.insertBefore(h2, downloadedFilesList);
+                         }
+                     }
+                    statusContainer.style.display = 'block';
+                 }
+                 if (eventSource) eventSource.close(); 
+            });
+
+            eventSource.onerror = (err) => {
+                 console.error("EventSource failed:", err);
+                 resetUI();
+                 addStatusMessage('Connection error with the server. Please try again.', "error-message");
+                 statusContainer.style.display = 'block';
+                 if (eventSource) eventSource.close();
+            };
+        });
+        
+        function handleMouseMove(event) {
+          const { pageX, pageY } = event;
+          
+          document.documentElement.style.setProperty('--mouse-x', `${pageX}px`);
+          document.documentElement.style.setProperty('--mouse-y', `${pageY}px`);
+        }
+
+        window.addEventListener('mousemove', handleMouseMove);
+        
+    </script>
+</body>
+</html> 
