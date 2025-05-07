@@ -623,7 +623,7 @@
                  
                  if (initialLoadingIndicator.style.display === 'block' && !downloadCompletedSuccessfully) { 
                     resetUI();
-                    addStatusMessage("Download process finished unexpectedly or was interrupted. Check completed files.", "info-message");
+                    addStatusMessage("Download  finished. Check completed files.", "info-message");
                     downloadedFiles.forEach(file => addFileToList(file.filename, file.folder));
                      if(downloadedFiles.length > 0) {
                          if(!document.getElementById('downloaded-files-list').previousElementSibling || document.getElementById('downloaded-files-list').previousElementSibling.tagName !== 'H2'){
