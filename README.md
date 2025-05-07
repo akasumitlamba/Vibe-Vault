@@ -1,6 +1,6 @@
 # Vibe Vault
 
-Vibe Vault allows you to download your favorite YouTube Music playlists as MP3 files directly to your computer. It provides a simple web interface for ease of use.
+Vibe Vault allows you to download your favorite YouTube Music playlists as MP3 files directly to your PC. It provides a simple web interface for ease of use.
 
 ![image](https://github.com/user-attachments/assets/bcb1de00-f47f-46c5-9704-916d05a0030d)
 
