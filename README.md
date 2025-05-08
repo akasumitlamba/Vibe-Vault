@@ -16,8 +16,6 @@ Vibe Vault allows you to download your favorite YouTube Music playlists as MP3 f
 
 ## How to Use
 
----
-
 ### Wuthout Git Installed
 ### 📦Download via ZIP File
 
