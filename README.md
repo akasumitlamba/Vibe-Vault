@@ -15,26 +15,23 @@ Vibe Vault allows you to download your favorite YouTube Music playlists as MP3 f
 *   **Interactive Background:** Aesthetically pleasing animated background.
 
 ## How to Use
-### Wuthout Git Installed
-### 📦 Alternative Option: Download via ZIP File
-
-If you prefer to download the repository as a ZIP file instead of cloning it via Git, follow these steps:
 
 ---
+
+### Wuthout Git Installed
+### 📦Download via ZIP File
+
+If you prefer to download the repository as a ZIP file instead of cloning it via Git, follow these steps:
 
 #### 1. **Download the ZIP file**
 - Go to the repository: [Vibe-Vault](https://github.com/akasumitlamba/Vibe-Vault)
 - Click the **"Code"** button.
 - Select **"Download ZIP"** and save the file to your desired location.
 
----
-
 #### 2. **Extract the ZIP file**
 - Locate the downloaded ZIP file.
 - Right-click and select **"Extract Here"** or **"Extract to Vibe-Vault"** (depending on your system).
 - Navigate to the extracted folder.
-
----
 
 #### 3. **Install dependencies**
 - Open a terminal in the extracted folder.
