@@ -40,15 +40,16 @@ If you prefer to download the repository as a ZIP file instead of cloning it via
 pip install -r requirements.txt
 ```
 #### 4.  **Run the application:**
-    ```bash
-    flask run
-    ```
+    
+```bash
+flask run
+```
 #### 5.  **Open in your browser:**
-    Navigate to `http://127.0.0.1:5000` (or the address shown in your terminal).
+Navigate to `http://127.0.0.1:5000` (or the address shown in your terminal).
 #### 6.  **Enter Playlist URL:**
-    Paste the YouTube Music playlist URL into the input field and click "Download Playlist".
+Paste the YouTube Music playlist URL into the input field and click "Download Playlist".
 #### 7.  **Access Files:**
-    Downloaded files will be saved in a subfolder named `downloaded_playlist` within a `downloads` directory created in the project's root folder. Links to the files will appear on the page after the download is complete.
+Downloaded files will be saved in a subfolder named `downloaded_playlist` within a `downloads` directory created in the project's root folder. Links to the files will appear on the page after the download is complete.
 
 
 ### With Git Installed
@@ -56,26 +57,26 @@ pip install -r requirements.txt
 #### Open Terminal in any folder
 
 #### 1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/akasumitlamba/Vibe-Vault.git
-    cd Vibe-Vault
-    ```
+```bash
+git clone https://github.com/akasumitlamba/Vibe-Vault.git
+cd Vibe-Vault
+```
 #### 2.  **Install dependencies:**
-    Make sure you have Python 3 installed.
-    ```bash
-    pip install -r requirements.txt
-    ```
-    This will install Flask and yt-dlp. You also need FFmpeg installed and accessible in your system's PATH for `yt-dlp` to convert and embed metadata/thumbnails correctly.
+Make sure you have Python 3 installed.
+```bash
+pip install -r requirements.txt
+```
+This will install Flask and yt-dlp. You also need FFmpeg installed and accessible in your system's PATH for `yt-dlp` to convert and embed metadata/thumbnails correctly.
 #### 3.  **Run the application:**
-    ```bash
-    flask run
-    ```
+```bash
+flask run
+```
 #### 4.  **Open in your browser:**
-    Navigate to `http://127.0.0.1:5000` (or the address shown in your terminal).
+Navigate to `http://127.0.0.1:5000` (or the address shown in your terminal).
 #### 5.  **Enter Playlist URL:**
-    Paste the YouTube Music playlist URL into the input field and click "Download Playlist".
+Paste the YouTube Music playlist URL into the input field and click "Download Playlist".
 #### 6.  **Access Files:**
-    Downloaded files will be saved in a subfolder named `downloaded_playlist` within a `downloads` directory created in the project's root folder. Links to the files will appear on the page after the download is complete.
+Downloaded files will be saved in a subfolder named `downloaded_playlist` within a `downloads` directory created in the project's root folder. Links to the files will appear on the page after the download is complete.
 
 ## License
 
