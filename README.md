@@ -15,6 +15,7 @@ Vibe Vault allows you to download your favorite YouTube Music playlists as MP3 f
 *   **Light/Dark Theme:** Toggle between light and dark themes for user preference.
 *   **Interactive Background:** Aesthetically pleasing animated background.
 
+
 ## How to Use
 
 ### Without Git Installed (Preferred)
