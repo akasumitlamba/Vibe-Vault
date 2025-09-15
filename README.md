@@ -1,6 +1,6 @@
 # Vibe Vault
 
-## PC app-Coming Soon
+## PC app-Coming Before GTA VI
 
 Vibe Vault allows you to download your favorite YouTube Music playlists as MP3 files directly to your PC. It provides a simple web interface for ease of use.
 
